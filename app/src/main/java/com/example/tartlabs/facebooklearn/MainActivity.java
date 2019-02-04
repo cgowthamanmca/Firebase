@@ -21,6 +21,7 @@ import android.view.View;
 import com.example.tartlabs.facebooklearn.fragment.ChatUserFragment;
 import com.example.tartlabs.facebooklearn.fragment.FeedFragment;
 import com.example.tartlabs.facebooklearn.fragment.FeedFragmentPaginate;
+import com.example.tartlabs.facebooklearn.fragment.PaginatedFeedFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private FeedFragment feedFragment;
     private ChatUserFragment chatUserFragment;
     private FeedFragmentPaginate feedFragmentPaginate;
+    private PaginatedFeedFragment paginatedFeedFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         feedFragment = new FeedFragment();
         chatUserFragment = new ChatUserFragment();
         feedFragmentPaginate = new FeedFragmentPaginate();
+        paginatedFeedFragment = new PaginatedFeedFragment();
         // replacemnetFragment(feedFragment);
 
         setSupportActionBar(toolbar);
@@ -65,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.bottom_action_home:
-                        replacemnetFragment(feedFragmentPaginate);
+                        replacemnetFragment(paginatedFeedFragment);
                         return true;
                     case R.id.bottom_action_notif:
                         replacemnetFragment(chatUserFragment);
