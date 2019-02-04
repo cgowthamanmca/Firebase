@@ -75,6 +75,7 @@ public class PaginatedFeedFragment extends Fragment {
         rvFeedList.addOnScrollListener(new PaginationScrollListener(llm) {
             @Override
             public void loadMoreItems() {
+                isLoading = true;
                 loadOldPosts();
             }
 
@@ -116,7 +117,7 @@ public class PaginatedFeedFragment extends Fragment {
                     setNoPosts();
                 } else {
                     setPosts();
-                    adapter.setPostList(posts);
+                    adapter.setPostList(postList);
                     adapter.notifyDataSetChanged();
                     if (postList.size() >= 10) {
                         adapter.addLoadingFooter();
@@ -143,7 +144,7 @@ public class PaginatedFeedFragment extends Fragment {
             if (adapter != null) {
                 adapter.removeLoadingFooter();
                 isLoading = false;
-                adapter.addAll(postList);
+                adapter.addAll(posts);
                 adapter.addLoadingFooter();
             }
         } else {
