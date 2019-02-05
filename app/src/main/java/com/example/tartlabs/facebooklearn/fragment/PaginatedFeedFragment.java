@@ -18,6 +18,11 @@ import com.example.tartlabs.facebooklearn.R;
 import com.example.tartlabs.facebooklearn.adapter.feed.PaginatedFeedAdapter;
 import com.example.tartlabs.facebooklearn.fbHelper.PostHelper;
 import com.example.tartlabs.facebooklearn.model.Post;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,13 +44,14 @@ public class PaginatedFeedFragment extends Fragment {
     private Post bottomPost = new Post();
     private PaginatedFeedAdapter adapter;
     private boolean isLastPage, isLoading;
+    private Query newFeedTrackerQuery;
 
     public PaginatedFeedFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_paginated_feed, container, false);
@@ -128,7 +134,78 @@ public class PaginatedFeedFragment extends Fragment {
         } else {
             setNoPosts();
         }
+        startTrackingNewFeed();
     }
+
+    private void startTrackingNewFeed() {
+        if (newFeedTrackerQuery != null) {
+            newFeedTrackerQuery.removeEventListener(feedChildEventListener);
+        }
+        newFeedTrackerQuery = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("post")
+                .orderByKey()
+                .startAt(bottomPost.getId());
+        newFeedTrackerQuery.addChildEventListener(feedChildEventListener);
+    }
+
+    private ChildEventListener feedChildEventListener = new ChildEventListener() {
+        @Override
+        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String s) {
+            Post post = dataSnapshot.getValue(Post.class);
+            if (post != null) {
+                post.setId(dataSnapshot.getKey());
+
+                if (postList.isEmpty()) {
+                    setPosts();
+                }
+                if (!postList.contains(post)) {
+                    postList.add(0, post);
+                    if (adapter != null) {
+                        if (adapter.getItemCount() == 0) {
+                            // Check count if no data set in adapter previously
+                            // means no updates an user enters first update
+                            adapter.setPostList(postList);
+                        }
+                        adapter.notifyItemInserted(0);
+                        rvFeedList.scrollToPosition(0);
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+            if (dataSnapshot.getValue() != null) {
+                Post todo = dataSnapshot.getValue(Post.class);
+                if (todo != null) {
+                    todo.setId(dataSnapshot.getKey());
+                    if (adapter != null) {
+                        if (adapter.getPostList() != null && !adapter.getPostList().isEmpty()) {
+                            adapter.getPostList().remove(todo);
+                            //adapter.notifyItemRemoved(index);
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+        }
+    };
 
     private void loadOldPosts() {
         hideProgress();

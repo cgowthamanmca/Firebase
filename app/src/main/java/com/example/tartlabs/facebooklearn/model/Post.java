@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Post {
-    private String id;
+    private String id = "";
     private String description;
     private List<Media> image;
     private User user;

@@ -75,7 +75,11 @@ public class PaginatedFeedAdapter extends RecyclerView.Adapter {
         return postList == null ? 0 : postList.size();
     }
 
-    /*Pagination helpers*/
+    public List<Post> getPostList() {
+        return postList;
+    }
+
+    /* Pagination helpers */
     public void add(Post post) {
         postList.add(post);
         notifyItemInserted(postList.size() - 1);
