@@ -190,7 +190,7 @@ public class CreatePostMutipleImage extends AppCompatActivity {
     }
 
     private void savePostInformation() {
-        Map<String, String> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("description", new_post_desc.getText().toString());
         map.put("image", imageUri.toString());
         map.put("user_id", auth.getCurrentUser().getUid());
@@ -216,9 +216,9 @@ public class CreatePostMutipleImage extends AppCompatActivity {
         }
 
         DatabaseReference post = ref.child("post").push();
+        map.put("image",imagePayload);
+        map.put("user",userObj);
         post.setValue(map);
-        post.child("image").setValue(imagePayload);
-        post.child("user").setValue(userObj);
         new_post_progress.setVisibility(View.GONE);
         finish();
     }

@@ -9,11 +9,12 @@ import android.view.ViewGroup;
 
 import com.example.tartlabs.facebooklearn.R;
 import com.example.tartlabs.facebooklearn.adapter.FeedFragmentAdapter;
+import com.example.tartlabs.facebooklearn.adapter.feed.viewHolder.PaginateFeedVH;
 import com.example.tartlabs.facebooklearn.model.Post;
 
 import java.util.List;
 
-public class FeedPaaginateAdapter extends RecyclerView.Adapter<PaginateFeed> {
+public class FeedPaaginateAdapter extends RecyclerView.Adapter<PaginateFeedVH> {
 
     private List<Post> postList;
     private FeedFragmentAdapter.feedListener listener;
@@ -29,16 +30,17 @@ public class FeedPaaginateAdapter extends RecyclerView.Adapter<PaginateFeed> {
 
     @NonNull
     @Override
-    public PaginateFeed onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public PaginateFeedVH onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         Context context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.blog_list_item, viewGroup, false);
-        return new PaginateFeed(view, listener);
+        //return new PaginateFeedVH(view, listener);
+        return null;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PaginateFeed paginateFeed, int i) {
-        paginateFeed.setFeed(postList.get(i));
+    public void onBindViewHolder(@NonNull PaginateFeedVH paginateFeedVH, int i) {
+        paginateFeedVH.setFeed(postList.get(i));
     }
 
     @Override

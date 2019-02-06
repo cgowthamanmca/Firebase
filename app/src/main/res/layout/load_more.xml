@@ -1,0 +1,13 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llLoader"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:layout_centerInParent="true"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:visibility="gone">
+
+    <ProgressBar
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
+</LinearLayout>
